@@ -3,6 +3,7 @@ from matplotlib import animation
 from random import uniform
 
 class Particle:
+    __slots__ = ('x', 'y', 'ang_vel')
     def __init__(self, x, y, ang_vel):
         self.x = x
         self.y = y
@@ -87,7 +88,7 @@ def benchmark_memory():
         Particle(uniform(-1.0, 1.0),
         uniform(-1.0, 1.0),
         uniform(-1.0, 1.0))
-        for i in range(100000)
+        for i in range(10000)
         ]
     simulator = ParticleSimulator(particles)
     simulator.evolve(0.001)
@@ -95,4 +96,4 @@ def benchmark_memory():
 if __name__ == "__main__":
     #test_visualize()
     #benchmark()
-    benchmark_memory
+    benchmark_memory()
