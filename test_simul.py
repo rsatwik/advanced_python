@@ -7,7 +7,7 @@ def test_evolve(benchmark):
     Particle(-0.1, -0.4, +3)
     ]
     simulator = ParticleSimulator(particles)
-    simulator.evolve(0.1)
+    simulator.evolve_fast(0.1)
     p0, p1, p2 = particles
     
     def fequal(a, b, eps=1e-5):
@@ -20,4 +20,4 @@ def test_evolve(benchmark):
     assert fequal(p2.x, 0.191358)
     assert fequal(p2.y, -0.365227)
     
-    benchmark(simulator.evolve, 0.1)
+    benchmark(simulator.evolve_fast, 0.1)

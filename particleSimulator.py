@@ -13,7 +13,7 @@ class ParticleSimulator:
     def __init__(self, particles):
         self.particles = particles
     
-    @profile
+    #@profile
     def evolve(self, dt):
         timestep = 0.00001
         nsteps = int(dt / timestep)
@@ -26,6 +26,16 @@ class ParticleSimulator:
                 d_y = timestep * p.ang_vel * v_y
                 p.x += d_x
                 p.y += d_y
+    #@profile
+    def evolve_fast(self, dt):
+        timestep = 0.00001
+        nsteps = int(dt/timestep)
+        for p in self.particles:
+            t_x_ang = timestep * p.ang_vel
+            for i in range(nsteps):
+                norm = (p.x**2 + p.y**2)**0.5
+                p.x, p.y = (p.x - t_x_ang * p.y/norm,
+                            p.y + t_x_ang * p.x/norm)
 
 
 def visualize(simulator):
@@ -42,7 +52,7 @@ def visualize(simulator):
         return (line,)  # The comma is important!
 
     def animate(i):
-        simulator.evolve(0.01)
+        simulator.evolve_fast(0.01)
         X = [p.x for p in simulator.particles]
         Y = [p.y for p in simulator.particles]
         line.set_data(X, Y)
@@ -62,15 +72,27 @@ def test_visualize():
     visualize(simulator)
 
 
-def benchmark():
-    particles = [
-        Particle(uniform(-1.0, 1.0), uniform(-1.0, 1.0),
-                 uniform(-1.0, 1.0))
-        for i in range(1000)]
+# def benchmark():
+#     particles = [
+#         Particle(uniform(-1.0, 1.0), uniform(-1.0, 1.0),
+#                  uniform(-1.0, 1.0))
+#         for i in range(1000)]
     
+#     simulator = ParticleSimulator(particles)
+#     simulator.evolve_fast(0.1)
+
+#@profile
+def benchmark_memory():
+    particles = [
+        Particle(uniform(-1.0, 1.0),
+        uniform(-1.0, 1.0),
+        uniform(-1.0, 1.0))
+        for i in range(100000)
+        ]
     simulator = ParticleSimulator(particles)
-    simulator.evolve(0.1)
+    simulator.evolve(0.001)
 
 if __name__ == "__main__":
     #test_visualize()
-    benchmark()
+    #benchmark()
+    benchmark_memory
